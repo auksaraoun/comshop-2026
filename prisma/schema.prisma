@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model brands {
+  id         Int        @id @default(autoincrement())
+  name       String?
+  created_at DateTime?  @default(now())
+  updated_at DateTime?  @default(now())
+  products   products[]
+}
+
+model product_attribute_lookups {
+  id                              Int                               @id @default(autoincrement())
+  detail                          String?                           @db.VarChar(255)
+  created_at                      DateTime?                         @default(now())
+  updated_at                      DateTime?                         @default(now())
+  product_attribute_value_lookups product_attribute_value_lookups[]
+  product_attributes              product_attributes[]
+}
+
+model product_attribute_value_lookups {
+  id                          Int                       @id @default(autoincrement())
+  product_attribute_lookup_id Int
+  detail_lookup_id            String?                   @db.VarChar(255)
+  value                       String?                   @db.VarChar(255)
+  created_at                  DateTime?                 @default(now())
+  updated_at                  DateTime?                 @default(now())
+  product_attribute_lookups   product_attribute_lookups @relation(fields: [product_attribute_lookup_id], references: [id])
+  product_attributes          product_attributes[]
+}
+
+model product_attributes {
+  id                                Int                              @id @default(autoincrement())
+  product_id                        Int?
+  product_attribute_lookup_id       Int?
+  product_attribute_value_lookup_id Int?
+  qty                               Int                              @default(0) @db.SmallInt
+  created_at                        DateTime?                        @default(now())
+  updated_at                        DateTime?                        @default(now())
+  product_attribute_lookups         product_attribute_lookups?       @relation(fields: [product_attribute_lookup_id], references: [id])
+  product_attribute_value_lookups   product_attribute_value_lookups? @relation(fields: [product_attribute_value_lookup_id], references: [id])
+  products                          products?                        @relation(fields: [product_id], references: [id])
+}
+
+model product_details {
+  id         Int       @id @default(autoincrement())
+  product_id Int?
+  detail     String?
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  products   products? @relation(fields: [product_id], references: [id])
+}
+
+model product_types {
+  id         Int        @id @default(autoincrement())
+  name       String?
+  created_at DateTime?  @default(now())
+  updated_at DateTime?  @default(now())
+  products   products[]
+}
+
+model products {
+  id                 Int                  @id @default(autoincrement())
+  product_type_id    Int?
+  brand_id           Int?
+  created_at         DateTime?            @default(now())
+  updated_at         DateTime?            @default(now())
+  product_attributes product_attributes[]
+  product_details    product_details[]
+  brands             brands?              @relation(fields: [brand_id], references: [id])
+  product_types      product_types?       @relation(fields: [product_type_id], references: [id])
+}
