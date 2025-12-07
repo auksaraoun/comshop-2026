@@ -1,10 +1,18 @@
 import express from 'express'
+
+// middleware
+
+// router
 import apiRouter from './routes/api.js'
 
 const app = express()
 const port = 3000
 
-app.use(express.json())
+const default_middlwares = [
+  express.json()
+]
+
+app.use(default_middlwares)
 
 app.use('/api', apiRouter);
 

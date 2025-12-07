@@ -5,16 +5,19 @@ import validate from '../utils/validate.js';
 export default {
     index: [
         query('page')
+            .trim()
             .toInt()
             .optional()
             .isInt({ min: 1, allow_leading_zeroes: false })
             .withMessage('must be integer.'),
         query('per_page')
+            .trim()
             .optional()
             .isInt({ min: 1, allow_leading_zeroes: false, max: 100 })
             .withMessage('must be integer.'),
         query('s')
             .optional()
+            .trim()
             .isString()
             .isLength({ max: 255 }),
         validate.handleValidateErrors
@@ -22,6 +25,7 @@ export default {
 
     show: [
         param('id')
+            .trim()
             .notEmpty()
             .isInt({ min: 1, allow_leading_zeroes: false })
             .toInt(),
@@ -30,6 +34,7 @@ export default {
 
     store: [
         body('name')
+            .trim()
             .notEmpty()
             .withMessage('is required')
             .isLength({
@@ -37,17 +42,12 @@ export default {
                 max: 255
             })
             .withMessage('length must be between 1 to 255'),
-        (req, res, next) => {
-            const validate = validationResult(req);
-            if (!validate.isEmpty()) {
-                return validate.sendResponseMessage(errors, res);
-            }
-            next();
-        }
+        validate.handleValidateErrors
     ],
 
     update: [
         param('id')
+            .trim()
             .notEmpty()
             .isInt({ min: 1, allow_leading_zeroes: false })
             .withMessage('must be integer'),
@@ -64,6 +64,7 @@ export default {
 
     destroy: [
         param('id')
+            .trim()
             .notEmpty()
             .isInt({ min: 1, allow_leading_zeroes: false })
             .withMessage('must be integer'),
