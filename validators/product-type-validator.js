@@ -5,37 +5,42 @@ import validate from '../utils/validate.js';
 export default {
     index: [
         query('page')
-            .trim()
             .toInt()
             .optional()
             .isInt({ min: 1, allow_leading_zeroes: false })
+            .trim()
+            .escape()
             .withMessage('must be integer.'),
         query('per_page')
-            .trim()
             .optional()
             .isInt({ min: 1, allow_leading_zeroes: false, max: 100 })
+            .trim()
+            .escape()
             .withMessage('must be integer.'),
         query('s')
             .optional()
-            .trim()
             .isString()
+            .trim()
+            .escape()
             .isLength({ max: 255 }),
         validate.handleValidateErrors
     ],
 
     show: [
         param('id')
-            .trim()
             .notEmpty()
             .isInt({ min: 1, allow_leading_zeroes: false })
+            .trim()
+            .escape()
             .toInt(),
         validate.handleValidateErrors
     ],
 
     store: [
         body('name')
-            .trim()
             .notEmpty()
+            .trim()
+            .escape()
             .withMessage('is required')
             .isLength({
                 min: 1,
@@ -48,11 +53,14 @@ export default {
     update: [
         param('id')
             .trim()
+            .escape()
             .notEmpty()
             .isInt({ min: 1, allow_leading_zeroes: false })
             .withMessage('must be integer'),
         body('name')
             .notEmpty()
+            .trim()
+            .escape()
             .withMessage('is required')
             .isLength({
                 min: 1,
@@ -64,8 +72,9 @@ export default {
 
     destroy: [
         param('id')
-            .trim()
             .notEmpty()
+            .trim()
+            .escape()
             .isInt({ min: 1, allow_leading_zeroes: false })
             .withMessage('must be integer'),
         validate.handleValidateErrors
