@@ -1,4 +1,5 @@
 import productTypeService from '../services/product-type-service.js'
+import logger from '../utils/logger.js'
 
 export default {
 
@@ -19,7 +20,7 @@ export default {
                 }
             });
         } catch (error) {
-            console.error('Error fetching product types:', error);
+            logger.logError(error, req);
             res.status(500).json({
                 data: null,
                 success: false,
@@ -44,7 +45,7 @@ export default {
                 'success': true
             });
         } catch (error) {
-            console.error('Error fetching product type:', error);
+            logger.logError(error, req);
             res.status(500).json({
                 data: null,
                 success: false,
@@ -64,7 +65,7 @@ export default {
                 'success': true
             });
         } catch (error) {
-            console.error('Error storing product type:', error);
+            logger.logError(error, req);
             res.status(500).json({
                 data: null,
                 success: false,
@@ -92,6 +93,7 @@ export default {
                     message: 'Not found product type'
                 });
             } else {
+                logger.logError(error, req);
                 res.status(500).json({
                     data: null,
                     success: false,
@@ -118,6 +120,7 @@ export default {
                     message: 'Not found product type'
                 });
             } else {
+                logger.logError(error, req);
                 res.status(500).json({
                     data: null,
                     success: false,

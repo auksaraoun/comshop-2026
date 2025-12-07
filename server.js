@@ -1,5 +1,8 @@
 import express from 'express'
 
+// libs
+import logger from './libs/logger.js'
+
 // middleware
 
 // router
@@ -17,5 +20,5 @@ app.use(default_middlwares)
 app.use('/api', apiRouter);
 
 app.listen(port, () => {
-  console.log(`listening on port ${port}`)
+  logger.info(`server started listening on port ${port}`)
 })
