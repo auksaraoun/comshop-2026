@@ -1,5 +1,5 @@
 import { param, body, query } from 'express-validator';
-import { handleValidateErrors } from '../utils/validate.js';
+import { handleValidateErrors, validProductAttrLookup } from '../utils/validate.js';
 
 
 export default {
@@ -19,6 +19,10 @@ export default {
             .trim()
             .escape()
             .isLength({ max: 255 }),
+        query('product_attribute_lookup_id')
+            .toInt()
+            .optional()
+            .isInt({ min: 1, allow_leading_zeroes: false }),
         handleValidateErrors
     ],
 
@@ -31,7 +35,7 @@ export default {
     ],
 
     store: [
-        body('name')
+        body('value')
             .notEmpty()
             .trim()
             .escape()
@@ -41,15 +45,22 @@ export default {
                 max: 255
             })
             .withMessage('length must be between 1 to 255'),
+        body('product_attribute_lookup_id')
+            .toInt()
+            .notEmpty()
+            .isInt({ min: 1, allow_leading_zeroes: false })
+            .custom(validProductAttrLookup),
         handleValidateErrors
     ],
 
     update: [
         param('id')
+            .trim()
+            .escape()
             .notEmpty()
             .isInt({ min: 1, allow_leading_zeroes: false })
             .withMessage('must be integer'),
-        body('name')
+        body('value')
             .notEmpty()
             .withMessage('is required')
             .isLength({
@@ -57,6 +68,12 @@ export default {
                 max: 255
             })
             .withMessage('length must be between 1 to 255'),
+        body('product_attribute_lookup_id')
+            .toInt()
+            .optional()
+            .isInt({ min: 1, allow_leading_zeroes: false })
+            .custom(validProductAttrLookup)
+            .withMessage('Incorrect Product ATTR ID'),
         handleValidateErrors
     ],
 

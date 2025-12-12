@@ -1,5 +1,5 @@
 import { param, body, query } from 'express-validator';
-import { handleValidateErrors } from '../utils/validate.js';
+import { handleValidateErrors, validProductType } from '../utils/validate.js';
 
 
 export default {
@@ -19,6 +19,10 @@ export default {
             .trim()
             .escape()
             .isLength({ max: 255 }),
+        query('product_type_id')
+            .toInt()
+            .optional()
+            .isInt({ min: 1, allow_leading_zeroes: false }),
         handleValidateErrors
     ],
 
@@ -31,7 +35,7 @@ export default {
     ],
 
     store: [
-        body('name')
+        body('detail')
             .notEmpty()
             .trim()
             .escape()
@@ -41,15 +45,22 @@ export default {
                 max: 255
             })
             .withMessage('length must be between 1 to 255'),
+        body('product_type_id')
+            .toInt()
+            .notEmpty()
+            .isInt({ min: 1, allow_leading_zeroes: false })
+            .custom(validProductType),
         handleValidateErrors
     ],
 
     update: [
         param('id')
+            .trim()
+            .escape()
             .notEmpty()
             .isInt({ min: 1, allow_leading_zeroes: false })
             .withMessage('must be integer'),
-        body('name')
+        body('detail')
             .notEmpty()
             .withMessage('is required')
             .isLength({
@@ -57,6 +68,12 @@ export default {
                 max: 255
             })
             .withMessage('length must be between 1 to 255'),
+        body('product_type_id')
+            .toInt()
+            .optional()
+            .isInt({ min: 1, allow_leading_zeroes: false })
+            .custom(validProductType)
+            .withMessage('Incorrect Product type ID'),
         handleValidateErrors
     ],
 

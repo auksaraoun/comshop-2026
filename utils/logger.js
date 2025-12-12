@@ -2,6 +2,7 @@ import logger from '../libs/logger.js'
 
 export default {
     logError(error, req, location = '') {
+        console.log(error);
         logger.log({
             level: 'error',
             location,

@@ -1,4 +1,4 @@
-import brandService from '../services/brand-service.js'
+import productAttrValueService from '../services/product-attribute-value-lookup-service.js'
 import logger from '../utils/logger.js'
 
 export default {
@@ -8,9 +8,10 @@ export default {
             const search = req.query.s;
             const per_page = parseInt(req.query.per_page) || 30;
             const page = parseInt(req.query.page) || 1;
-            const { brands, total } = await brandService.getAllData(page, per_page, search);
+            const product_attribute_lookup_id = parseInt(req.query.product_attribute_lookup_id) || null;
+            const { product_attrs, total } = await productAttrValueService.getAllData(page, per_page, search, product_attribute_lookup_id);
             res.json({
-                'data': brands,
+                'data': product_attrs,
                 'success': true,
                 'meta': {
                     page,
@@ -32,16 +33,16 @@ export default {
     async show(req, res) {
         try {
             const id = parseInt(req.params.id);
-            const brands = await brandService.getData(id);
-            if (!brands) {
+            const product_attrs = await productAttrValueService.getData(id);
+            if (!product_attrs) {
                 return res.status(404).json({
                     data: null,
                     success: false,
-                    message: 'Not found brands'
+                    message: 'Not found product_attrs_value'
                 });
             }
             res.json({
-                'data': brands,
+                'data': product_attrs,
                 'success': true
             });
         } catch (error) {
@@ -56,12 +57,14 @@ export default {
 
     async store(req, res) {
         try {
-            const name = req.body.name;
-            const brands = await brandService.createData({
-                name: name
+            const value = req.body.value;
+            const product_attribute_lookup_id = parseInt(req.body.product_attribute_lookup_id) || null;
+            const product_attrs = await productAttrValueService.createData({
+                value: value,
+                product_attribute_lookup_id: product_attribute_lookup_id
             });
             res.status(201).json({
-                'data': brands,
+                'data': product_attrs,
                 'success': true
             });
         } catch (error) {
@@ -77,12 +80,14 @@ export default {
     async update(req, res) {
         try {
             const id = parseInt(req.params.id);
-            const name = req.body.name;
-            const brands = await brandService.updateData({
-                name: name
+            const value = req.body.value;
+            const product_attribute_lookup_id = parseInt(req.body.product_attribute_lookup_id) || null;
+            const product_attrs = await productAttrValueService.updateData({
+                value: value,
+                product_attribute_lookup_id: product_attribute_lookup_id
             }, id);
             res.json({
-                'data': brands,
+                'data': product_attrs,
                 'success': true
             });
         } catch (error) {
@@ -90,7 +95,7 @@ export default {
                 res.status(404).json({
                     data: null,
                     success: false,
-                    message: 'Not found brands'
+                    message: 'Not found product_attrs_value'
                 });
             } else {
                 logger.logError(error, req);
@@ -106,9 +111,9 @@ export default {
     async destroy(req, res) {
         try {
             const id = parseInt(req.params.id);
-            const brands = await brandService.deleteData(id);
+            const product_attrs = await productAttrValueService.deleteData(id);
             res.json({
-                'data': brands,
+                'data': product_attrs,
                 'success': true
             });
         } catch (error) {
@@ -116,7 +121,7 @@ export default {
                 res.status(404).json({
                     data: null,
                     success: false,
-                    message: 'Not found brands'
+                    message: 'Not found product_attrs_value'
                 });
             } else {
                 logger.logError(error, req);
@@ -126,6 +131,7 @@ export default {
                     message: 'internal server error'
                 });
             }
+
         }
     },
 

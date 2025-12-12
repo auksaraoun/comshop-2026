@@ -100,7 +100,6 @@ export default {
                     message: 'internal server error'
                 });
             }
-            console.error('Error updating product type:', error);
         }
     },
 
@@ -127,7 +126,6 @@ export default {
                     message: 'internal server error'
                 });
             }
-            console.error('Error deleting product type:', error);
         }
     },
 
