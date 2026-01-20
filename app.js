@@ -15,6 +15,8 @@ const default_middlwares = [
     express.json()
 ]
 
+console.log('test');
+
 app.use(default_middlwares)
 
 app.use('/api', apiRouter);
